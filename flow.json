@@ -1,0 +1,206 @@
+[
+    {
+        "id": "7d040b9058b0ce97",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "19a3e04a88da5d21",
+        "type": "inject",
+        "z": "7d040b9058b0ce97",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "4",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [
+                "6483a64c61d4a599"
+            ]
+        ]
+    },
+    {
+        "id": "6483a64c61d4a599",
+        "type": "camera-mac",
+        "z": "7d040b9058b0ce97",
+        "name": "",
+        "outputPath": "/tmp",
+        "fileName": "output.jpg",
+        "x": 340,
+        "y": 60,
+        "wires": [
+            [
+                "d4a522f8ccbbd9ed"
+            ]
+        ]
+    },
+    {
+        "id": "d4a522f8ccbbd9ed",
+        "type": "facial-recognition",
+        "z": "7d040b9058b0ce97",
+        "image": "payload",
+        "settings": "settings",
+        "name": "",
+        "bindings": "CPU",
+        "FaceDetector": "SsdMobilenetv1",
+        "FaceDetector_SsdMobilenetv1_maxResults": 3,
+        "FaceDetector_SsdMobilenetv1_minConfidence": 0.5,
+        "FaceDetector_tinyFaceDetector_inputSize": 416,
+        "FaceDetector_tinyFaceDetector_scoreThreshold": 0.5,
+        "Tasks": "detectSingleFace",
+        "FaceLandmarks": false,
+        "FaceExpressions": true,
+        "AgeAndGender": true,
+        "FaceDescriptors": false,
+        "Face_Recognition": "Face_Recognition_disabled",
+        "Face_Recognition_enabled_path": "FullPathToLabeledFaces",
+        "Face_Recognition_distanceThreshold": 0.7,
+        "x": 290,
+        "y": 180,
+        "wires": [
+            [
+                "0459c3c28d49ce0f"
+            ]
+        ]
+    },
+    {
+        "id": "0459c3c28d49ce0f",
+        "type": "function",
+        "z": "7d040b9058b0ce97",
+        "name": "function 1",
+        "func": "msg.payload = msg.payload[\"Result\"][\"expressions\"][\"happy\"];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 180,
+        "wires": [
+            [
+                "5b925cf79f7aa077"
+            ]
+        ]
+    },
+    {
+        "id": "5b925cf79f7aa077",
+        "type": "switch",
+        "z": "7d040b9058b0ce97",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "0.2",
+                "vt": "num"
+            },
+            {
+                "t": "lte",
+                "v": "0.2",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 430,
+        "y": 340,
+        "wires": [
+            [
+                "843bed2bd1ae3617"
+            ],
+            [
+                "584f6e9a9911ab26"
+            ]
+        ]
+    },
+    {
+        "id": "843bed2bd1ae3617",
+        "type": "change",
+        "z": "7d040b9058b0ce97",
+        "name": "Change to 1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "1",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 320,
+        "wires": [
+            [
+                "2cb5af9fa9ea094c"
+            ]
+        ]
+    },
+    {
+        "id": "584f6e9a9911ab26",
+        "type": "change",
+        "z": "7d040b9058b0ce97",
+        "name": "Change to 0",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 380,
+        "wires": [
+            [
+                "2cb5af9fa9ea094c"
+            ]
+        ]
+    },
+    {
+        "id": "2cb5af9fa9ea094c",
+        "type": "arduino out",
+        "z": "7d040b9058b0ce97",
+        "name": "",
+        "pin": "7",
+        "state": "OUTPUT",
+        "arduino": "010ac476a4850d9d",
+        "x": 910,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "010ac476a4850d9d",
+        "type": "arduino-board",
+        "device": "/dev/cu.usbserial-1410"
+    }
+]
